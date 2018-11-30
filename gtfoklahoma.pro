@@ -5,9 +5,14 @@ CONFIG += c++14
 
 INCLUDEPATH += /usr/local/include/
 
-# HEADERS += plugins/engine.h \
+HEADERS += models/SqliteDbConn.h \
+           models/SqlQueryModel.h \
+           models/StoreModel.h
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+           models/SqliteDbConn.cpp \
+           models/SqlQueryModel.cpp \
+           models/StoreModel.cpp
 
 RESOURCES += qml.qrc
 
@@ -15,5 +20,5 @@ RESOURCES += qml.qrc
 QML_IMPORT_PATH =
 
 # Default rules for deployment.
-include(deployment.pri)
+# include(deployment.pri)
 
