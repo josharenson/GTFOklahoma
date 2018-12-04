@@ -1,6 +1,7 @@
 #include "SqlQueryModel.h"
 
 #include <QDebug>
+#include <QSqlError>
 #include <QSqlField>
 #include <QSqlRecord>
 
@@ -13,6 +14,22 @@ SqlQueryModel::SqlQueryModel(SqliteDbConn *dbConn, QObject *parent)
 SqlQueryModel::~SqlQueryModel()
 {
     delete(m_dbConn);
+}
+
+QSqlQuery SqlQueryModel::arbitraryQuery(const QString &queryStr, const QString &caller) const
+{
+    QSqlQuery query(m_dbConn->db());
+    if (!query.prepare(queryStr)) {
+        qDebug() << "Error preparing query for " << caller;
+        qDebug() << query.lastError().text();
+    }
+
+    if(!query.exec()) {
+        qDebug() << "Error executing query for " << caller;
+        qDebug() << query.lastError().text();
+    }
+
+    return query;
 }
 
 void SqlQueryModel::setQuery(const QString &query)

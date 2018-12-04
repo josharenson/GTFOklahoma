@@ -4,19 +4,14 @@
 #include <QQmlApplicationEngine>
 #include <QUrl>
 
-#include "models/SqliteDbConn.h"
-#include "models/StoreModel.h"
+#include "GameEngine.h"
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
-    QQmlApplicationEngine engine;
+    QQmlApplicationEngine qmlEngine;
+    GameEngine gameEngine(qmlEngine);
 
-    SqliteDbConn *dbConn = new SqliteDbConn("models/gtfoklahoma.db");
-    StoreModel *storeModel = new StoreModel(dbConn);
-
-    engine.rootContext()->setContextProperty("StoreModel", storeModel);
-
-    engine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
+    qmlEngine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
     return app.exec();
 }

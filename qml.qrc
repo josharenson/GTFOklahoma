@@ -1,5 +1,10 @@
 <RCC>
     <qresource prefix="/">
         <file>qml/main.qml</file>
+
+        <file>qml/assets/left_arrow.png</file>
+        <file>qml/assets/right_arrow.png</file>
+        <file>qml/components/ItemCategoryDelegate.qml</file>
+        <file>qml/components/StoreCategoryDelegate.qml</file>
     </qresource>
 </RCC>

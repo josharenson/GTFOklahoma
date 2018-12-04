@@ -62,7 +62,7 @@ void StoreModel::updateCategories()
                                 WHERE store_name = '%1'")
                        .arg(m_storeName);
 
-    QSqlQuery query(queryStr, m_dbConn->db());
+    QSqlQuery query = arbitraryQuery(queryStr, __func__);
     while (query.next()) {
         QString category = query.value(0).toString();
         m_categories << category;

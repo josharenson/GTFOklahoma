@@ -28,5 +28,7 @@ private:
     QHash<int, QByteArray> m_roleNames;
 
 protected:
+    QSqlQuery arbitraryQuery(const QString &queryStr, const QString &caller) const;
+
     SqliteDbConn *m_dbConn;
 };

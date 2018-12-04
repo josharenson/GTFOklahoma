@@ -1,6 +1,8 @@
 import QtQuick 2.3
 import QtQuick.Window 2.2
 
+import "./components"
+
 Window {
     id: root
 
@@ -13,6 +15,7 @@ Window {
         interval: 100
         running: true
         onTriggered: {
+            GameEngine.currentPlayer = "Josh"
             StoreModel.storeName = "Intro Store"
         }
     }
@@ -31,75 +34,24 @@ Window {
 
         model: StoreModel.categories
 
-        property string currentCategory: model[currentIndex]
+        property string currentCategory: model[currentIndex] ? model[currentIndex] : ""
+
+        highlightMoveDuration: 500
+        interactive: false
         orientation: ListView.Horizontal
-        delegate: Rectangle {
+
+        delegate: StoreCategoryDelegate {
             height: root.height; width: root.width
-            color: "teal"
 
-            ListView {
-                id: itemsListView
+            categoryName: modelData
+            itemModel: StoreModel
+            modelCount: listView.count
+            myIndex: index
 
-                anchors.centerIn: parent
-                width: parent.width
-                height: 800
+            onLeftClicked: listView.decrementCurrentIndex()
+            onRightClicked: listView.incrementCurrentIndex()
 
-                model: StoreModel
-
-                delegate: Rectangle {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    height: 200; width: 400
-                    color: "silver"
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: name
-                    }
-                }
-            }
-
-            Text {
-                id: categoryName
-
-                anchors.bottom: parent.bottom
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.margins: 20
-                text: modelData
-            }
-
-            Rectangle {
-                id: leftButton
-
-                height: 40; width: 40
-                anchors.bottom: parent.bottom
-                anchors.left: parent.left
-
-                color: "red"
-
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        listView.decrementCurrentIndex()
-                    }
-                }
-            }
-
-            Rectangle {
-                id: rightButton
-
-                height: 40; width: 40
-                anchors.bottom: parent.bottom
-                anchors.right: parent.right
-
-                color: "red"
-
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        listView.incrementCurrentIndex()
-                    }
-                }
-            }
+            visible: index == listView.currentIndex
         }
     }
 }
