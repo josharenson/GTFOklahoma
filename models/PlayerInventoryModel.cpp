@@ -11,6 +11,14 @@ PlayerInventoryModel::PlayerInventoryModel(GameEngine *gameEngine,
 {
     connect(gameEngine, &GameEngine::currentPlayerChanged,
             this, &PlayerInventoryModel::updateCurrentPlayer);
+
+    m_baseQuery = QString("SELECT Items.* \
+                           FROM Items, PlayerInventory \
+                           ON Items.name=PlayerInventory.item_name \
+                           WHERE PlayerInventory.player_name='%1'");
+
+    // FIXME: This really needs to be fixed in the parent class.
+    this->updateCurrentPlayer("HACK: NOT A REAL NAME");
 }
 
 void PlayerInventoryModel::addItemToInventory(const QString &itemName)
@@ -123,4 +131,5 @@ bool PlayerInventoryModel::playerHasItemCategory(const QString &itemName) const
 void PlayerInventoryModel::updateCurrentPlayer(const QString &playerName)
 {
     m_currentPlayer = playerName;
+    this->setQuery(m_baseQuery.arg(m_currentPlayer));
 }

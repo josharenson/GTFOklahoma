@@ -30,7 +30,8 @@ Window {
     ListView {
         id: listView
 
-        anchors.fill: parent
+        anchors.top: root.top
+        height: root.height / 2; width: root.width
 
         model: StoreModel.categories
 
@@ -53,5 +54,10 @@ Window {
 
             visible: index == listView.currentIndex
         }
+    }
+
+    PlayerInventoryView {
+        anchors.top: listView.bottom
+        height: root.height / 2; width: root.width
     }
 }

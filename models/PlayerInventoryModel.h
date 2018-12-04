@@ -25,4 +25,6 @@ private:
 
     void updateCurrentPlayer(const QString &playerName);
     QString m_currentPlayer;
+
+    QString m_baseQuery;
 };
