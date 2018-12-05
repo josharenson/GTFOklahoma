@@ -38,12 +38,6 @@ void SqlQueryModel::setQuery(const QString &query)
     generateRoleNames();
 }
 
-void SqlQueryModel::setQuery(const QSqlQuery & query)
-{
-    QSqlQueryModel::setQuery(query);
-    generateRoleNames();
-}
-
 void SqlQueryModel::generateRoleNames()
 {
     m_roleNames.clear();
