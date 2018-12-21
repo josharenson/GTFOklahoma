@@ -56,8 +56,8 @@ Window {
         }
     }
 
-    PlayerInventoryView {
+    /*PlayerInventoryView {
         anchors.top: listView.bottom
         height: root.height / 2; width: root.width
-    }
+    }*/
 }

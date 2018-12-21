@@ -1,6 +1,7 @@
 #include "GameEngine.h"
 
 #include <QDebug>
+#include <QObject>
 #include <QQmlContext>
 #include <QSqlError>
 
@@ -8,6 +9,7 @@ GameEngine::GameEngine(const QQmlApplicationEngine &qmlEngine, QObject *parent)
     : QObject(parent),
       m_dbConn { new SqliteDbConn(DB_PATH) },
       m_playerInventoryModel { new PlayerInventoryModel(this, m_dbConn, parent) },
+      m_playerStatsModel { new PlayerStatsModel(this, m_dbConn, parent) },
       m_storeModel { new StoreModel(m_dbConn, parent) }
 {
     qmlEngine.rootContext()->setContextProperty("GameEngine", this);
@@ -19,12 +21,16 @@ GameEngine::~GameEngine()
 {
     delete(m_dbConn);
     delete(m_playerInventoryModel);
+    delete(m_playerStatsModel);
     delete(m_storeModel);
 }
 
 void GameEngine::addItemToInventory(const QString &itemName)
 {
     m_playerInventoryModel->addItemToInventory(itemName);
+    foreach (const auto &stat, m_playerStatsModel->statsForItem(itemName)) {
+        qDebug() << stat;
+    }
 }
 
 QString GameEngine::currentPlayer() const

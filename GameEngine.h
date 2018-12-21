@@ -5,6 +5,7 @@
 
 #include "models/SqliteDbConn.h"
 #include "models/PlayerInventoryModel.h"
+#include "models/PlayerStatsModel.h"
 #include "models/StoreModel.h"
 
 class GameEngine : public QObject
@@ -35,5 +36,6 @@ private:
     QString m_currentPlayer;
     SqliteDbConn *m_dbConn;
     PlayerInventoryModel *m_playerInventoryModel;
+    PlayerStatsModel *m_playerStatsModel;
     StoreModel *m_storeModel;
 };
