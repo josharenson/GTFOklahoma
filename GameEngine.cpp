@@ -27,11 +27,11 @@ GameEngine::~GameEngine()
 
 void GameEngine::addItemToInventory(const QString &itemName)
 {
-    m_playerInventoryModel->addItemToInventory(itemName);
-
-    QHash<QString, qreal> itemStats = m_playerStatsModel->statsForItem(itemName);
-    foreach (const auto &key, itemStats.keys()) {
-        m_playerStatsModel->updateStat(key, itemStats[key]);
+    if(m_playerInventoryModel->addItemToInventory(itemName)) {
+        QHash<QString, qreal> itemStats = m_playerStatsModel->statsForItem(itemName);
+        foreach (const auto &key, itemStats.keys()) {
+            m_playerStatsModel->updateStat(key, itemStats[key]);
+        }
     }
 }
 

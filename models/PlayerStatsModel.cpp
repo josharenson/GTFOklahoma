@@ -1,3 +1,5 @@
+#include <QSqlError>
+
 #include "../GameEngine.h"
 #include "PlayerStatsModel.h"
 
@@ -58,9 +60,6 @@ QHash<QString, qreal> PlayerStatsModel::statsForItem(const QString &itemName) co
 
 void PlayerStatsModel::updateStat(const QString &statName, const qreal delta)
 {
-    qDebug() << "Updating " << statName << " by " << delta;
-    qDebug() << "The current value for " << statName << " is " << this->currentValue(statName);
-
     qreal newValue = this->currentValue(statName) + delta;
     QString queryStr = QString("INSERT OR REPLACE INTO \
                                 PlayerStats( \
@@ -71,6 +70,11 @@ void PlayerStatsModel::updateStat(const QString &statName, const qreal delta)
                       .arg(m_currentPlayer)
                       .arg(statName)
                       .arg(newValue);
+
+    QSqlQuery query = arbitraryQuery(queryStr, __func__);
+    if (!query.lastError().isValid()) {
+        qDebug() << "Updated " << statName << " to " << newValue;
+    }
 }
 
 void PlayerStatsModel::updateCurrentPlayer(const QString &playerName)

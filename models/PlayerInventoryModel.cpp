@@ -21,13 +21,13 @@ PlayerInventoryModel::PlayerInventoryModel(GameEngine *gameEngine,
     this->updateCurrentPlayer("HACK: NOT A REAL NAME");
 }
 
-void PlayerInventoryModel::addItemToInventory(const QString &itemName)
+bool PlayerInventoryModel::addItemToInventory(const QString &itemName)
 {
     qDebug() << "Trying to add " << itemName << " to " << m_currentPlayer
              << "'s inventory";
 
     if (!this->playerCanAddItem(itemName)) {
-        return;
+        return false;
     }
 
     QString queryStr = QString("INSERT INTO \
@@ -40,7 +40,10 @@ void PlayerInventoryModel::addItemToInventory(const QString &itemName)
     if (!query.lastError().isValid()) {
         qDebug() << "Successfully added " << itemName  << " to " << m_currentPlayer
                  << "'s inventory";
+        return true;
     }
+
+    return false;
 }
 
 bool PlayerInventoryModel::playerCanAddItem(const QString &itemName) const
