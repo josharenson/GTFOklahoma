@@ -1,0 +1,39 @@
+#!/usr/bin/env python
+
+import argparse
+import sqlite3
+
+DB_PATH = "../models/gtfoklahoma.db"
+MUTABLE_TABLES = [
+    "PlayerInventory",
+    "PlayerStats",
+    "Players"
+]
+
+
+def reset_all():
+    confirm = input("Are you sure you want to clobber all userdata [y/N] ")
+    if confirm.lower() != 'y':
+        print("Aborted.")
+        return
+
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    for table_name in MUTABLE_TABLES:
+        query = "DELETE FROM {table_name}".format(table_name=table_name)
+        cur.execute(query)
+    conn.commit()
+    conn.close()
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="A tool for administering "
+                                                 "the games database. This "
+                                                 "is a tool for developers.")
+    parser.add_argument("--reset-all", '-r',
+                        action="store_true",
+                        help="Delete all data from all mutable tables.")
+    args = parser.parse_args()
+
+    if args.reset_all:
+        reset_all()
