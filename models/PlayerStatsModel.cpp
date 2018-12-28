@@ -66,6 +66,10 @@ QHash<QString, qreal> PlayerStatsModel::statsForItem(const QString &itemName) co
 
 void PlayerStatsModel::updateStat(const QString &statName, const qreal delta)
 {
+    /* FIXME: This is kind of hacky and since its not transaction based
+     * it introduces a race condition. Low priority as the race will
+     * almost certainly never be hit in practice. A DBA I am not. */
+
     qreal newValue = this->currentValue(statName) + delta;
 
     // Delete the current stat value if it exists
