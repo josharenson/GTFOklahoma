@@ -10,6 +10,12 @@ PlayerStatsModel::PlayerStatsModel(GameEngine *gameEngine,
 {
     connect(gameEngine, &GameEngine::currentPlayerChanged,
             this, &PlayerStatsModel::updateCurrentPlayer);
+
+    m_baseQuery = QString("SELECT PlayerStats.* \
+                           FROM PlayerStats \
+                           WHERE PlayerStats.player_name='%1'");
+    // FIXME
+    this->updateCurrentPlayer("HACK: NOT A REAL NAME");
 }
 
 qreal PlayerStatsModel::currentValue(const QString &statName) const
@@ -80,4 +86,5 @@ void PlayerStatsModel::updateStat(const QString &statName, const qreal delta)
 void PlayerStatsModel::updateCurrentPlayer(const QString &playerName)
 {
     m_currentPlayer = playerName;
+    this->setQuery(m_baseQuery.arg(m_currentPlayer));
 }

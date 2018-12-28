@@ -14,6 +14,7 @@ GameEngine::GameEngine(const QQmlApplicationEngine &qmlEngine, QObject *parent)
 {
     qmlEngine.rootContext()->setContextProperty("GameEngine", this);
     qmlEngine.rootContext()->setContextProperty("PlayerInventoryModel", m_playerInventoryModel);
+    qmlEngine.rootContext()->setContextProperty("PlayerStatsModel", m_playerStatsModel);
     qmlEngine.rootContext()->setContextProperty("StoreModel", m_storeModel);
 }
 
