@@ -13,7 +13,7 @@ public:
                                   SqliteDbConn *dbConn,
                                   QObject *parent=nullptr);
 
-    void addItemToInventory(const QString &itemName);
+    bool addItemToInventory(const QString &itemName);
     bool playerCanAddItem(const QString &itemName) const;
 
 signals:
