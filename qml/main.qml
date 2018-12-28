@@ -61,8 +61,8 @@ Window {
         height: root.height / 2; width: root.width
     }*/
 
-    PlayerStatsView {
+    /*PlayerStatsView {
         anchors.top: listView.bottom
         height: root.height / 2; width: root.width
-    }
+    }*/
 }

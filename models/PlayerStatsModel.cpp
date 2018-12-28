@@ -67,7 +67,34 @@ QHash<QString, qreal> PlayerStatsModel::statsForItem(const QString &itemName) co
 void PlayerStatsModel::updateStat(const QString &statName, const qreal delta)
 {
     qreal newValue = this->currentValue(statName) + delta;
-    QString queryStr = QString("INSERT OR REPLACE INTO \
+
+    // Delete the current stat value if it exists
+    QString queryStr = QString("SELECT COUNT('*') AS count \
+                                FROM PlayerStats \
+                                WHERE PlayerStats.stat_name='%1' \
+                                AND PlayerStats.player_name='%2'")
+                       .arg(statName)
+                       .arg(m_currentPlayer);
+    QSqlQuery query = arbitraryQuery(queryStr, __func__);
+
+    if (!query.first()) {
+        qDebug() << "Error detrmining PlayerStat information.";
+        return;
+    }
+
+    if (query.value("count").toInt() != 0) {
+        QString queryStr = QString("DELETE \
+                                    FROM PlayerStats \
+                                    WHERE PlayerStats.stat_name='%1' \
+                                    AND PlayerStats.player_name='%2'")
+                           .arg(statName)
+                           .arg(m_currentPlayer);
+
+        query = arbitraryQuery(queryStr, __func__);
+    }
+
+    // Insert, or re-insert the updated stat
+    queryStr = QString("INSERT INTO \
                                 PlayerStats( \
                                     player_name, \
                                     stat_name, \
@@ -77,7 +104,7 @@ void PlayerStatsModel::updateStat(const QString &statName, const qreal delta)
                       .arg(statName)
                       .arg(newValue);
 
-    QSqlQuery query = arbitraryQuery(queryStr, __func__);
+    query = arbitraryQuery(queryStr, __func__);
     if (!query.lastError().isValid()) {
         qDebug() << "Updated " << statName << " to " << newValue;
     }
