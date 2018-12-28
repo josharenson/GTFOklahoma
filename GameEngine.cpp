@@ -28,8 +28,10 @@ GameEngine::~GameEngine()
 void GameEngine::addItemToInventory(const QString &itemName)
 {
     m_playerInventoryModel->addItemToInventory(itemName);
-    foreach (const auto &stat, m_playerStatsModel->statsForItem(itemName)) {
-        qDebug() << stat;
+
+    QHash<QString, qreal> itemStats = m_playerStatsModel->statsForItem(itemName);
+    foreach (const auto &key, itemStats.keys()) {
+        m_playerStatsModel->updateStat(key, itemStats[key]);
     }
 }
 
