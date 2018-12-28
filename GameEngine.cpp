@@ -28,13 +28,12 @@ GameEngine::~GameEngine()
 
 void GameEngine::addItemToInventory(const QString &itemName)
 {
-   // if(m_playerInventoryModel->addItemToInventory(itemName)) {
-    m_playerInventoryModel->addItemToInventory(itemName); 
+   if(m_playerInventoryModel->addItemToInventory(itemName)) {
         QHash<QString, qreal> itemStats = m_playerStatsModel->statsForItem(itemName);
         foreach (const auto &key, itemStats.keys()) {
             m_playerStatsModel->updateStat(key, itemStats[key]);
         }
-   // }
+   }
 }
 
 QString GameEngine::currentPlayer() const
