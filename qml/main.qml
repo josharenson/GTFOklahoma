@@ -65,4 +65,14 @@ Window {
         anchors.top: listView.bottom
         height: root.height / 2; width: root.width
     }*/
+
+    Rectangle {
+        height: 50; width: 50
+        color: "red"
+        anchors.centerIn: parent
+        MouseArea {
+            anchors.fill: parent
+            onClicked: GameEngine.eventTimerRunning = !GameEngine.eventTimerRunning
+        }
+    }
 }
