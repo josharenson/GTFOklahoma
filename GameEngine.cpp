@@ -1,5 +1,6 @@
 #include "GameEngine.h"
 
+#include <cmath>
 #include <QDebug>
 #include <QObject>
 #include <QQmlContext>
@@ -54,9 +55,19 @@ void GameEngine::setCurrentPlayer(const QString &playerName)
     }
 }
 
+qreal GameEngine::kms_per_tick() const
+{
+    qreal inventoryWeightKg = m_playerInventoryModel->inventoryWeightKg();
+    int ticksPerHour = TICKS_PER_DAY / 24;
+
+    qreal curVel = (-VELOCITY_CONSTANT * log10(inventoryWeightKg)) + MAX_VELOCITY_KMH;
+    return curVel / ticksPerHour;
+}
+
 void GameEngine::tick() const
 {
-    qDebug() << "TICK";
+    qDebug() << this->kms_per_tick();
+    // qDebug() << this->m_playerInventoryModel->inventoryWeightKg();
 }
 
 void GameEngine::toggleEventTimer()

@@ -95,6 +95,24 @@ bool PlayerInventoryModel::playerCanAddItem(const QString &itemName) const
     return true;
 }
 
+qreal PlayerInventoryModel::inventoryWeightKg() const
+{
+    QString queryStr = QString("SELECT SUM(ItemStatModifiers.delta) AS total_weight_kg \
+                                FROM ItemStatModifiers, PlayerInventory \
+                                WHERE ItemStatModifiers.stat_category_name = 'weight_kg' \
+                                AND PlayerInventory.item_name = ItemStatModifiers.item_name \
+                                AND PlayerInventory.player_name = '%1'")
+                       .arg(m_currentPlayer);
+    QSqlQuery query = arbitraryQuery(queryStr, __func__);
+
+    if (!query.first()) {
+        qDebug() << "Could not determine player's inventory weight";
+        return 100; // If this function is hacked somehow, slow the player down :-)
+    }
+
+    return query.value("total_weight_kg").toReal();
+}
+
 bool PlayerInventoryModel::playerHasItem(const QString &itemName) const
 {
     QString queryStr = QString("SELECT * FROM PlayerInventory \

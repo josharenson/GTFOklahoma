@@ -15,6 +15,7 @@ public:
 
     bool addItemToInventory(const QString &itemName);
     bool playerCanAddItem(const QString &itemName) const;
+    qreal inventoryWeightKg() const;
 
 signals:
     void currentPlayerChanged();
