@@ -66,8 +66,11 @@ qreal GameEngine::kms_per_tick() const
 
 void GameEngine::tick() const
 {
-    qDebug() << this->kms_per_tick();
-    // qDebug() << this->m_playerInventoryModel->inventoryWeightKg();
+    if (m_playerMoving) {
+        m_playerStatsModel->updateStat("kms_traveled", this->kms_per_tick());
+    }
+
+
 }
 
 void GameEngine::toggleEventTimer()

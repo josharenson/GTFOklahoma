@@ -1,7 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import argparse
+import pdb
 import sqlite3
+import sys
 
 DB_PATH = "../models/gtfoklahoma.db"
 MUTABLE_TABLES = [
@@ -9,6 +11,95 @@ MUTABLE_TABLES = [
     "PlayerStats",
     "Players"
 ]
+
+
+def add_fixed_event_interactive():
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+
+    query_templ = """
+    INSERT INTO FixedEvents(event_type, kms_from_origin, event_name,
+                            event_description, has_choices)
+    VALUES({event_type}, {kms_from_origin}, {event_name},
+           '{event_description}', {has_choices})
+    """
+
+    query = "SELECT type_name FROM EventTypes"
+    cur.execute(query)
+    event_types = [x[0] for x in cur.fetchall()]
+
+    query = "SELECT name FROM StatCategories"
+    cur.execute(query)
+    stat_types = [x[0] for x in cur.fetchall()]
+
+    event_type = None
+    while(True):
+        print("What type of event is this?")
+        event_opts = [x for x in zip(range(len(event_types)), event_types)]
+        for event_opt in event_opts:
+            print("    {}. {}".format(event_opt[0], event_opt[1]))
+        type_idx = int(input("Enter a choice [{}-{}]-> "
+                             .format(0, len(event_opts) - 1)))
+        if type_idx in range(len(event_opts)):
+            event_type = event_types[type_idx]
+            break
+        else:
+            print("Please enter a valid choice!\n")
+
+    kms_from_origin = int(input("How many kilometers is this event from "
+                                "the origin-> "))
+
+    event_name = None
+    query = """
+    SELECT COUNT(*) FROM FixedEvents WHERE event_name='{}'
+    """
+    while(True):
+        event_name = input("What is the internal name for this event-> ")
+        query = query.format(str(event_name))
+        cur.execute(query)
+        if cur.fetchone()[0] == 0:
+            break
+        else:
+            print("Event names must be unique.\n")
+
+    event_description = None
+    while(True):
+        event_description = input("Enter a description for this event-> ")
+        print("\n\n{}".format(event_description))
+        confirm = input("Is this what you want for the description [y/N]-> ")
+        if confirm.lower() == 'y':
+            break
+        else:
+            continue
+
+    while(True):
+        has_choices = input("Does this event present the user with "
+                            "choices [y/N]-> ")
+        if has_choices.lower() == 'n' or has_choices == '':
+            has_choices = 0
+            break
+        elif has_choices.lower == 'y':
+            has_choices = 1
+            break
+        else:
+            continue
+
+    query = query_templ.format(event_type=event_type,
+                               kms_from_origin=kms_from_origin,
+                               event_name=event_name,
+                               event_description=event_description,
+                               has_choices=has_choices)
+
+    while(True):
+        print("\n====================\n I will execute \n{}".format(query))
+        confirm = input("Is this correct? No will abort. [y/N]-> ")
+        if confirm.lower() == 'n' or confirm == '':
+            sys.exit(-1)
+        elif confirm.lower() == 'y':
+            cur.execute(query)
+            break
+        else:
+            continue
 
 
 def reset_all():
@@ -30,10 +121,17 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="A tool for administering "
                                                  "the games database. This "
                                                  "is a tool for developers.")
+    parser.add_argument("--add-fixed-event",
+                        action="store_true",
+                        help="Interactive wizard for adding events")
+
     parser.add_argument("--reset-all", '-r',
                         action="store_true",
                         help="Delete all data from all mutable tables.")
+
     args = parser.parse_args()
 
-    if args.reset_all:
+    if args.add_fixed_event:
+        add_fixed_event_interactive()
+    elif args.reset_all:
         reset_all()
